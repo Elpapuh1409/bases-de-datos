@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - Win Sports</title>
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        .config-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .config-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .config-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #000;
+            margin: 0 0 8px 0;
+        }
+
+        .config-header p {
+            color: #666;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .config-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-top: 4px solid #f50;
+            transition: all 0.3s ease;
+        }
+
+        .config-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .config-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #000;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0 0 16px 0;
+            line-height: 1.6;
+        }
+
+        .config-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 32px;
+            border-top: 4px solid #f50;
+        }
+
+        .config-section h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #000;
+            margin: 0 0 24px 0;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f50;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="url"],
+        input[type="password"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="url"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #f50;
+            box-shadow: 0 0 8px rgba(255, 85, 0, 0.3);
+            background: #fff9f0;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-help {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .switch {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .switch input[type="checkbox"] {
+            width: 50px;
+            height: 26px;
+            appearance: none;
+            background: #ddd;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+
+        .switch input[type="checkbox"]:checked {
+            background: #f50;
+        }
+
+        .switch input[type="checkbox"]:before {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease;
+        }
+
+        .switch input[type="checkbox"]:checked:before {
+            left: 26px;
+        }
+
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .color-option {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .color-swatch {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            border: 3px solid #e8e8e8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+            border-color: #f50;
+        }
+
+        .color-swatch.active {
+            border-color: #000;
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        }
+
+        .color-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #000;
+            text-align: center;
+        }
+
+        .settings-group {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 3px solid #f50;
+        }
+
+        .settings-group h4 {
+            margin: 0 0 12px 0;
+            color: #f50;
+            font-size: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: 2px solid #f50;
+            background: #fff;
+            color: #f50;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #f50;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+        }
+
+        .btn.primary {
+            background: #f50;
+            color: #fff;
+            border: 2px solid #f50;
+        }
+
+        .btn.primary:hover {
+            background: #d839ff;
+            border-color: #d839ff;
+            box-shadow: 0 4px 12px rgba(216, 57, 255, 0.3);
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: #666;
+            border-color: #ddd;
+        }
+
+        .btn.secondary:hover {
+            background: #f9f9f9;
+            border-color: #f50;
+            color: #f50;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .alert.info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            color: #1565c0;
+        }
+
+        .alert.success {
+            background: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            color: #2e7d32;
+        }
+
+        .alert.warning {
+            background: #fff9f0;
+            border-left: 4px solid #f50;
+            color: #cc4400;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 32px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .tab-button {
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .tab-button:hover {
+            color: #666;
+        }
+
+        .tab-button.active {
+            color: #f50;
+            border-bottom-color: #f50;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .config-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                border-bottom: 3px solid #e8e8e8;
+                border-left: 3px solid transparent;
+                padding: 12px 16px;
+            }
+
+            .tab-button.active {
+                border-bottom-color: transparent;
+                border-left-color: #f50;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <h1 class="brand">Configuración <span class="accent">Win Sports</span></h1>
+            <nav class="nav">
+                <a href="./Pantalla_Inicial.html">Principal</a>
+                <a href="./lector_qr.html">Lector QR</a>
+                <a href="./usos.html">Guía</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="config-container">
+        <section class="config-header">
+            <h1>Configuración del Sistema</h1>
+            <p>Personaliza y ajusta los parámetros de tu sistema de inventario</p>
+        </section>
+
+        <!-- Tabs de navegación -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab(event, 'general')">General</button>
+            <button class="tab-button" onclick="switchTab(event, 'camara')">Cámara</button>
+            <button class="tab-button" onclick="switchTab(event, 'base-datos')">Base de Datos</button>
+            <button class="tab-button" onclick="switchTab(event, 'apariencia')">Apariencia</button>
+            <button class="tab-button" onclick="switchTab(event, 'avanzado')">Avanzado</button>
+        </div>
+
+        <!-- TAB 1: GENERAL -->
+        <div id="general" class="tab-content active">
+            <section class="config-section">
+                <h2>Configuración General</h2>
+
+                <div class="form-group">
+                    <label for="nombre-empresa">Nombre de la Empresa</label>
+                    <input type="text" id="nombre-empresa" placeholder="Win Sports" value="Win Sports">
+                    <span class="form-help">Aparecerá en los reportes y headers</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email-admin">Email del Administrador</label>
+                    <input type="email" id="email-admin" placeholder="admin@winsports.com">
+                    <span class="form-help">Para notificaciones importantes</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono de Contacto</label>
+                    <input type="text" id="telefono" placeholder="+57 (1) 000-0000">
+                </div>
+
+                <div class="form-group">
+                    <label>Idioma</label>
+                    <select>
+                        <option selected>Español</option>
+                        <option>English</option>
+                        <option>Portugués</option>
+                    </select>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Modo oscuro</strong>
+                        <div class="form-help">Cambia a tema oscuro</div>
+                    </div>
+                    <input type="checkbox" id="dark-mode">
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Notificaciones</strong>
+                        <div class="form-help">Recibir alertas del sistema</div>
+                    </div>
+                    <input type="checkbox" id="notifications" checked>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 2: CÁMARA -->
+        <div id="camara" class="tab-content">
+            <section class="config-section">
+                <h2>Configuración de Cámara</h2>
+
+                <div class="settings-group">
+                    <h4>Tipo de Fuente</h4>
+                    <label>
+                        <input type="radio" name="camera-type" value="local" checked> 
+                        Cámara Local (Índice 0)
+                    </label>
+                    <label style="margin-top: 8px;">
+                        <input type="radio" name="camera-type" value="remote"> 
+                        Fuente Remota (IP Webcam)
+                    </label>
+                </div>
+
+                <div id="local-settings" class="settings-group">
+                    <h4>Configuración Cámara Local</h4>
+                    <div class="form-group">
+                        <label for="camera-index">Índice de la Cámara</label>
+                        <input type="number" id="camera-index" value="0" min="0" max="5">
+                        <span class="form-help">0 = cámara por defecto, 1, 2, ... = otras cámaras</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="camera-resolution">Resolución</label>
+                        <select id="camera-resolution">
+                            <option>640x480</option>
+                            <option selected>1280x720</option>
+                            <option>1920x1080</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="remote-settings" class="settings-group" style="display: none;">
+                    <h4>Configuración Fuente Remota</h4>
+                    <div class="form-group">
+                        <label for="remote-url">URL del Stream</label>
+                        <input type="url" id="remote-url" placeholder="http://192.168.1.42:8080/video">
+                        <span class="form-help">Ejemplo: IP Webcam en Android</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="connection-timeout">Timeout de Conexión (segundos)</label>
+                        <input type="number" id="connection-timeout" value="10" min="5" max="60">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="frame-rate">FPS (Fotogramas por Segundo)</label>
+                    <input type="number" id="frame-rate" value="30" min="1" max="60">
+                    <span class="form-help">Mayor FPS = mejor detección pero más CPU</span>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Espejo de Cámara</strong>
+                        <div class="form-help">Voltear imagen horizontalmente</div>
+                    </div>
+                    <input type="checkbox" id="mirror-camera">
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Mostrar Caja Delimitadora</strong>
+                        <div class="form-help">Dibuja una caja alrededor de los códigos QR</div>
+                    </div>
+                    <input type="checkbox" id="show-bbox" checked>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 3: BASE DE DATOS -->
+        <div id="base-datos" class="tab-content">
+            <section class="config-section">
+                <h2>Configuración de Base de Datos</h2>
+
+                <div class="alert info">
+                    <span></span>
+                    <div>Base de datos opcional. Por defecto, los datos se guardan en CSV.</div>
+                </div>
+
+                <div class="settings-group">
+                    <h4>Tipo de Base de Datos</h4>
+                    <label>
+                        <input type="radio" name="db-type" value="none" checked> 
+                        Sin Base de Datos (CSV)
+                    </label>
+                    <label style="margin-top: 8px;">
+                        <input type="radio" name="db-type" value="sqlite"> 
+                        SQLite (Local)
+                    </label>
+                    <label style="margin-top: 8px;">
+                        <input type="radio" name="db-type" value="postgres"> 
+                        PostgreSQL (Servidor)
+                    </label>
+                </div>
+
+                <div id="db-settings" style="display: none;">
+                    <div class="form-group">
+                        <label for="db-host">Host del Servidor</label>
+                        <input type="text" id="db-host" placeholder="localhost">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="db-port">Puerto</label>
+                            <input type="number" id="db-port" value="5432">
+                        </div>
+                        <div class="form-group">
+                            <label for="db-name">Nombre de la BD</label>
+                            <input type="text" id="db-name" placeholder="inventario_winsports">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="db-user">Usuario</label>
+                            <input type="text" id="db-user">
+                        </div>
+                        <div class="form-group">
+                            <label for="db-password">Contraseña</label>
+                            <input type="password" id="db-password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="export-folder">Carpeta de Exportación</label>
+                    <input type="text" id="export-folder" placeholder="./escaneos/">
+                    <span class="form-help">Donde se guardarán los CSV exportados</span>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Backup Automático</strong>
+                        <div class="form-help">Guardar copia de seguridad diaria</div>
+                    </div>
+                    <input type="checkbox" id="auto-backup" checked>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 4: APARIENCIA -->
+        <div id="apariencia" class="tab-content">
+            <section class="config-section">
+                <h2>Configuración de Apariencia</h2>
+
+                <div class="form-group">
+                    <label>Paleta de Colores</label>
+                    <div class="color-picker-group">
+                        <div class="color-option">
+                            <div class="color-swatch active" style="background: #f50;">F50</div>
+                            <span class="color-label">Naranja</span>
+                        </div>
+                        <div class="color-option">
+                            <div class="color-swatch" style="background: #d839ff;">D839FF</div>
+                            <span class="color-label">Morado</span>
+                        </div>
+                        <div class="color-option">
+                            <div class="color-swatch" style="background: #000000; color: #f50;">000</div>
+                            <span class="color-label">Negro</span>
+                        </div>
+                        <div class="color-option">
+                            <div class="color-swatch" style="background: #ffffff; border-color: #000; color: #000;">FFF</div>
+                            <span class="color-label">Blanco</span>
+                        </div>
+                    </div>
+                    <span class="form-help">Selecciona la paleta principal (actualmente: Naranja Win Sports)</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="font-size">Tamaño de Fuente</label>
+                    <select id="font-size">
+                        <option>Pequeño</option>
+                        <option selected>Normal</option>
+                        <option>Grande</option>
+                    </select>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Mostrar Logo</strong>
+                        <div class="form-help">Mostrar logo de Win Sports en headers</div>
+                    </div>
+                    <input type="checkbox" id="show-logo" checked>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Animaciones Suaves</strong>
+                        <div class="form-help">Efectos de transición y animaciones</div>
+                    </div>
+                    <input type="checkbox" id="animations" checked>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Compacto</strong>
+                        <div class="form-help">Reducir espaciado general (mejor para pantallas pequeñas)</div>
+                    </div>
+                    <input type="checkbox" id="compact">
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 5: AVANZADO -->
+        <div id="avanzado" class="tab-content">
+            <section class="config-section">
+                <h2>🔧 Configuración Avanzada</h2>
+
+                <div class="form-group">
+                    <label for="dedup-time">Tiempo de Deduplicación (segundos)</label>
+                    <input type="number" id="dedup-time" value="2" min="0" max="10">
+                    <span class="form-help">Evita escanear el mismo código dos veces en este tiempo</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="max-codes">Máximo Códigos en Caché</label>
+                    <input type="number" id="max-codes" value="1000" min="100" max="10000">
+                    <span class="form-help">Límite de códigos guardados en memoria</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="log-level">Nivel de Registro (Log)</label>
+                    <select id="log-level">
+                        <option>DEBUG</option>
+                        <option selected>INFO</option>
+                        <option>WARNING</option>
+                        <option>ERROR</option>
+                    </select>
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Modo Debug</strong>
+                        <div class="form-help">Mostrar información técnica en consola</div>
+                    </div>
+                    <input type="checkbox" id="debug-mode">
+                </div>
+
+                <div class="switch">
+                    <div>
+                        <strong>Usar pyzbar</strong>
+                        <div class="form-help">Si está disponible, usa pyzbar en lugar de OpenCV</div>
+                    </div>
+                    <input type="checkbox" id="use-pyzbar">
+                </div>
+
+                <div class="form-group">
+                    <label for="request-timeout">Timeout de Solicitud (segundos)</label>
+                    <input type="number" id="request-timeout" value="30" min="5" max="300">
+                </div>
+            </section>
+
+            <section class="config-section">
+                <h2>Gestión de Datos</h2>
+
+                <div class="alert warning">
+                    <span></span>
+                    <div>Estas acciones no se pueden deshacer. Procede con cuidado.</div>
+                </div>
+
+                <div class="button-group" style="margin-top: 16px;">
+                    <button class="btn secondary" onclick="exportConfig()">Exportar Config</button>
+                    <button class="btn secondary" onclick="importConfig()">Importar Config</button>
+                    <button class="btn secondary" onclick="resetConfig()">Restaurar Valores Defecto</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Botones de Acción General -->
+        <div class="button-group">
+            <a href="./Pantalla_Inicial.html" class="btn secondary">← Volver</a>
+            <button class="btn primary" onclick="guardarConfiguracion()">Guardar Configuración</button>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© Win Sports 2025 - Panel de Configuración</small>
+        </div>
+    </footer>
+
+    <script>
+        // Cambiar tabs
+        function switchTab(event, tabName) {
+            event.preventDefault();
+            
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Desactivar todos los botones
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar tab seleccionado
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Cambiar entre cámara local y remota
+        document.querySelectorAll('input[name="camera-type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'local') {
+                    document.getElementById('local-settings').style.display = 'block';
+                    document.getElementById('remote-settings').style.display = 'none';
+                } else {
+                    document.getElementById('local-settings').style.display = 'none';
+                    document.getElementById('remote-settings').style.display = 'block';
+                }
+            });
+        });
+
+        // Cambiar entre tipos de BD
+        document.querySelectorAll('input[name="db-type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.getElementById('db-settings').style.display = 
+                    this.value !== 'none' ? 'block' : 'none';
+            });
+        });
+
+        // Guardar configuración
+        function guardarConfiguracion() {
+            const config = {
+                general: {
+                    nombre: document.getElementById('nombre-empresa').value,
+                    email: document.getElementById('email-admin').value,
+                    telefono: document.getElementById('telefono').value,
+                    idioma: document.querySelector('select').value,
+                    darkMode: document.getElementById('dark-mode').checked,
+                    notificaciones: document.getElementById('notifications').checked
+                },
+                camara: {
+                    tipo: document.querySelector('input[name="camera-type"]:checked').value,
+                    indice: document.getElementById('camera-index').value,
+                    resolucion: document.getElementById('camera-resolution').value,
+                    url: document.getElementById('remote-url').value,
+                    fps: document.getElementById('frame-rate').value,
+                    espejo: document.getElementById('mirror-camera').checked,
+                    cajaDelimitadora: document.getElementById('show-bbox').checked
+                }
+            };
+
+            localStorage.setItem('winsports-config', JSON.stringify(config));
+            
+            const alert = document.createElement('div');
+            alert.className = 'alert success';
+            alert.innerHTML = '✅ Configuración guardada exitosamente';
+            alert.style.marginBottom = '24px';
+            
+            const firstSection = document.querySelector('.config-section');
+            firstSection.parentNode.insertBefore(alert, firstSection);
+            
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        // Exportar configuración
+        function exportConfig() {
+            const config = localStorage.getItem('winsports-config') || '{}';
+            const blob = new Blob([config], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `winsports-config-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        // Importar configuración
+        function importConfig() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const config = JSON.parse(event.target.result);
+                        localStorage.setItem('winsports-config', JSON.stringify(config));
+                        alert('✅ Configuración importada');
+                        location.reload();
+                    } catch (err) {
+                        alert('❌ Error al importar');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Restaurar valores defecto
+        function resetConfig() {
+            if (confirm('¿Restaurar configuración a valores defecto? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('winsports-config');
+                alert('✅ Configuración restaurada');
+                location.reload();
+            }
+        }
+
+        // Cargar configuración guardada
+        window.addEventListener('DOMContentLoaded', function() {
+            const config = JSON.parse(localStorage.getItem('winsports-config') || '{}');
+            
+            if (config.general) {
+                document.getElementById('nombre-empresa').value = config.general.nombre || 'Win Sports';
+                document.getElementById('email-admin').value = config.general.email || '';
+                document.getElementById('telefono').value = config.general.telefono || '';
+                document.getElementById('dark-mode').checked = config.general.darkMode || false;
+                document.getElementById('notifications').checked = config.general.notificaciones !== false;
+            }
+            
+            if (config.camara) {
+                if (config.camara.tipo === 'remote') {
+                    document.querySelector('input[name="camera-type"][value="remote"]').checked = true;
+                    document.getElementById('local-settings').style.display = 'none';
+                    document.getElementById('remote-settings').style.display = 'block';
+                }
+                document.getElementById('camera-index').value = config.camara.indice || '0';
+                document.getElementById('remote-url').value = config.camara.url || '';
+                document.getElementById('frame-rate').value = config.camara.fps || '30';
+                document.getElementById('mirror-camera').checked = config.camara.espejo || false;
+                document.getElementById('show-bbox').checked = config.camara.cajaDelimitadora !== false;
+            }
+
+            // --- DARK MODE LOGIC ---
+            const darkModeCheckbox = document.getElementById('dark-mode');
+            // Aplica el tema oscuro si está activado en config o en localStorage
+            function applyDarkMode(active) {
+                if (active) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+            }
+            // Leer preferencia de localStorage (tiene prioridad)
+            const darkPref = localStorage.getItem('winsports-dark-mode');
+            if (darkPref !== null) {
+                const isDark = darkPref === 'true';
+                darkModeCheckbox.checked = isDark;
+                applyDarkMode(isDark);
+            } else {
+                // Si no hay preferencia, usar config.general.darkMode
+                applyDarkMode(darkModeCheckbox.checked);
+            }
+            // Listener para el checkbox
+            darkModeCheckbox.addEventListener('change', function() {
+                applyDarkMode(this.checked);
+                localStorage.setItem('winsports-dark-mode', this.checked);
+            });
+        });
+    </script>
+</body>
+</html>

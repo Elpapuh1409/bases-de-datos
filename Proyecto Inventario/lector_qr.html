@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lector QR - Inventario Win Sports</title>
+    <link rel="stylesheet" href="./styles.css">
+    <style>
+        .qr-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 32px; margin-bottom: 32px; }
+        .video-section { display: flex; flex-direction: column; }
+        #qr-video { 
+            width: 100%; 
+            max-height: 520px; 
+            border-radius: var(--radius); 
+            background: #000; 
+            border: 3px solid #f50;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: block;
+        }
+        .controls { 
+            display: flex; 
+            gap: 16px; 
+            margin-top: 16px; 
+            flex-wrap: wrap;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .controls label { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.95rem; 
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+        .controls input[type="checkbox"] { 
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #f50;
+        }
+        .results-section { display: flex; flex-direction: column; }
+        .results-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 16px; 
+            font-size: 0.9rem;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .results-table th, .results-table td { 
+            padding: 12px 14px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--border);
+        }
+        .results-table th { 
+            background: linear-gradient(90deg, #f9f9f9 0%, #f5f5f5 100%);
+            font-weight: 700; 
+            border-bottom: 2px solid #f50;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+        .results-table tbody tr {
+            transition: background 0.2s ease;
+        }
+        .results-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+        .badge { 
+            display: inline-block; 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            background: #fff0e6; 
+            color: #d839ff; 
+            font-weight: 600;
+            border: 1px solid rgba(216,57,255,0.3);
+        }
+        .source-group {
+            background: #f9f9f9;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-top: 12px;
+        }
+        .source-options {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .source-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .source-options input[type="radio"] {
+            accent-color: #f50;
+            cursor: pointer;
+        }
+        #remote-input {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            align-items: center;
+        }
+        .source-select { 
+            padding: 10px 14px; 
+            border: 2px solid #f50; 
+            border-radius: 8px; 
+            font-size: 0.9rem;
+            font-family: inherit;
+            flex: 1;
+            min-width: 250px;
+            transition: all 0.3s ease;
+        }
+        .source-select:focus { 
+            outline: none; 
+            border-color: #d839ff; 
+            box-shadow: 0 0 8px rgba(216,57,255,0.4);
+            background: #fff;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        @media (max-width: 1024px) { 
+            .qr-container { 
+                grid-template-columns: 1fr; 
+                gap: 20px;
+            }
+        }
+        @media (max-width: 768px) { 
+            .qr-container { 
+                grid-template-columns: 1fr; 
+            }
+            .controls {
+                flex-direction: column;
+            }
+            .source-options {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            #remote-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .source-select {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <h1 class="brand">Lector QR <span class="accent">Win Sports</span></h1>
+            <nav class="nav">
+                <a href="./Pantalla_Inicial.html">Inicio</a>
+                <a href="./configuracion.html">Configurar</a>
+                <a href="./resultados.html">Resultados</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Configurar fuente de video</h2>
+            <p class="muted">Selecciona si deseas usar la cámara local o una fuente remota como tu smartphone.</p>
+            <div class="source-group" id="source-choice">
+                <div class="source-options">
+                    <label>
+                        <input type="radio" name="source" value="local" checked> 
+                        Cámara local
+                    </label>
+                    <label>
+                        <input type="radio" name="source" value="remote"> 
+                        Fuente remota (URL)
+                    </label>
+                </div>
+                <div id="remote-input" hidden>
+                    <input type="text" id="remote-url" class="source-select" placeholder="http://192.168.1.42:8080/video" style="flex: 1;">
+                    <small style="color: var(--muted); white-space: nowrap;">Ej: IP Webcam</small>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn primary" id="start-btn">▶ Iniciar lectura</button>
+                <button class="btn" id="stop-btn" disabled>⏹ Detener</button>
+            </div>
+        </section>
+
+        <div class="qr-container">
+            <section class="card video-section">
+                <h2>Vista previa</h2>
+                <p class="muted">El video en directo aparecerá aquí. Muestra un código QR frente a la cámara.</p>
+                <video id="qr-video" playsinline></video>
+                <div class="controls">
+                    <label>
+                        <input type="checkbox" id="mirror"> Espejo
+                    </label>
+                    <label>
+                        <input type="checkbox" id="draw-bbox" checked> Mostrar caja
+                    </label>
+                </div>
+            </section>
+
+            <section class="card results-section">
+                <h2>Últimos escaneos</h2>
+                <p class="muted">Historial en tiempo real de códigos detectados.</p>
+                <div style="overflow-y: auto; max-height: 520px; border-radius: 8px; border: 1px solid var(--border);">
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Hora</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-tbody">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" id="export-btn">Descargar CSV</button>
+                    <button class="btn" id="clear-btn">Limpiar</button>
+                </div>
+            </section>
+        </div>
+
+        <section class="card full" style="margin-top: 24px;">
+            <h2>Instrucciones de uso</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 16px;">
+                <div>
+                    <h3 style="color: #f50; margin-top: 0;">Cámara local</h3>
+                    <p class="muted" style="margin: 0;">Asegúrate de permitir acceso a la cámara en tu navegador. La aplicación usará la cámara por defecto del dispositivo (índice 0).</p>
+                </div>
+                <div>
+                    <h3 style="color: #f50; margin-top: 0;">Fuente remota</h3>
+                    <p class="muted" style="margin: 0;">Usa aplicaciones como "IP Webcam" en Android. Conecta PC y móvil a la misma red Wi-Fi y copia la URL del servidor.</p>
+                </div>
+                <div>
+                    <h3 style="color: #f50; margin-top: 0;">Exportar datos</h3>
+                    <p class="muted" style="margin: 0;">Los códigos escaneados se almacenan en memoria. Usa "Descargar CSV" para guardar un archivo con los resultados en tu computadora.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© Win Sports - Inventario</small>
+        </div>
+    </footer>
+
+    <script src="./qr-scanner.js"></script>
+    <script>
+        // Mostrar/ocultar input remoto
+        document.querySelectorAll('input[name="source"]').forEach(radio => {
+            radio.addEventListener('change', function(){
+                document.getElementById('remote-input').hidden = this.value !== 'remote';
+            });
+        });
+
+        // Almacenar resultados
+        let scannedCodes = [];
+
+        // Simular detección QR (reemplazar con jsQR o librería real)
+        document.getElementById('start-btn').addEventListener('click', function(){
+            const source = document.querySelector('input[name="source"]:checked').value;
+            const url = source === 'remote' ? document.getElementById('remote-url').value : null;
+            console.log('Iniciando lectura:', source, url);
+            // Aquí iría la lógica de inicialización de cámara
+            alert('Lectura iniciada (versión demo)');
+            document.getElementById('stop-btn').disabled = false;
+            this.disabled = true;
+        });
+
+        document.getElementById('stop-btn').addEventListener('click', function(){
+            console.log('Deteniendo lectura');
+            document.getElementById('start-btn').disabled = false;
+            this.disabled = true;
+        });
+
+        // Agregar código de prueba (simular escaneo)
+        function addScannedCode(code) {
+            const now = new Date().toLocaleTimeString();
+            scannedCodes.push({ code, time: now });
+            const tbody = document.getElementById('results-tbody');
+            const row = tbody.insertRow(0);
+            row.innerHTML = `
+                <td>${code}</td>
+                <td>${now}</td>
+                <td><span class="badge">Detectado</span></td>
+            `;
+            if (tbody.rows.length > 20) {
+                tbody.deleteRow(tbody.rows.length - 1);
+            }
+        }
+
+        // Botones de acción
+        document.getElementById('export-btn').addEventListener('click', function(){
+            if (scannedCodes.length === 0) {
+                alert('No hay códigos escaneados aún.');
+                return;
+            }
+            let csv = 'Código,Hora\n';
+            scannedCodes.forEach(item => {
+                csv += `"${item.code}","${item.time}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'escaneos.csv';
+            a.click();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function(){
+            if (confirm('¿Limpiar todos los escaneos?')) {
+                scannedCodes = [];
+                document.getElementById('results-tbody').innerHTML = '';
+            }
+        });
+
+        // Demo: simular un escaneo cada 3 segundos (comentar después)
+        // setInterval(() => addScannedCode('TEST-' + Math.random().toString(36).substring(7)), 3000);
+    </script>
+</body>
+</html>

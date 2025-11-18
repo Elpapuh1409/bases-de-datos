@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Datos - Sistema de Inventario Win Sports</title>
+    <style>
+        /* Variables CSS para Win Sports */
+        :root {
+            --accent: #f50;
+            --accent-dark: #d839ff;
+            --primary: #000000;
+            --bg: #ffffff;
+            --text: #333;
+            --text-light: #666;
+            --border: #e8e8e8;
+            --success: #28a745;
+            --warning: #ffc107;
+            --error: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #333 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Formulario Principal */
+        .form-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--accent) 0%, #ff7a33 100%);
+            color: white;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .form-group .required::after {
+            content: ' *';
+            color: var(--error);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245, 80, 0, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        /* Secciones del formulario */
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Campos de fecha especiales */
+        .date-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Campos de progreso */
+        .progress-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        /* Estados y checkboxes */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+        }
+
+        /* Campos monetarios */
+        .money-input {
+            position: relative;
+        }
+
+        .money-input::before {
+            content: '$';
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .money-input input {
+            padding-left: 32px;
+        }
+
+        /* Botones de acción */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn.primary:hover {
+            background: #ff7a33;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(245, 80, 0, 0.3);
+        }
+
+        .btn.secondary {
+            background: #f8f9fa;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn.secondary:hover {
+            background: #e9ecef;
+            border-color: #ddd;
+        }
+
+        .btn.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn.success:hover {
+            background: #218838;
+        }
+
+        /* Indicadores de validación */
+        .form-group.error .form-input,
+        .form-group.error .form-select,
+        .form-group.error .form-textarea {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .form-group.success .form-input,
+        .form-group.success .form-select,
+        .form-group.success .form-textarea {
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Contador de caracteres */
+        .char-counter {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* Progress bar para estado del formulario */
+        .form-progress {
+            background: #f8f9fa;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .form-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #ff7a33);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .nav {
+                gap: 20px;
+            }
+
+            .form-content {
+                padding: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .date-group {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+
+            .form-header {
+                padding: 24px 20px;
+            }
+
+            .form-content {
+                padding: 20px;
+            }
+        }
+
+        /* Animaciones */
+        .form-container {
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+            color: var(--text);
+        }
+
+        /* Estilos para filtros del formulario */
+        .filter-section {
+            background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .filter-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .filter-toggle:hover {
+            background: #ff7a33;
+            transform: translateY(-1px);
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .filter-input, .filter-select {
+            padding: 8px 12px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(245, 80, 0, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.apply {
+            background: var(--success);
+            color: white;
+        }
+
+        .filter-btn.apply:hover {
+            background: #218838;
+        }
+
+        .filter-btn.clear {
+            background: #f8f9fa;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .filter-btn.clear:hover {
+            background: #e9ecef;
+        }
+
+        .filter-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .status-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Estilos para secciones filtradas */
+        .form-section.hidden {
+            display: none;
+        }
+
+        .form-section.highlighted {
+            background: linear-gradient(135deg, #fffbf0 0%, #ffffff 100%);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .form-group.hidden {
+            display: none;
+        }
+
+        .form-group.highlighted {
+            background: linear-gradient(135deg, #fff9f0 0%, #ffffff 100%);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+        }
+
+        /* Animaciones suaves */
+        .form-section, .form-group {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <h1 class="brand">Inventario <span class="accent">Win Sports</span></h1>
+            <nav class="nav">
+                <a href="./Pantalla_Inicial.html">Inicio</a>
+                <a href="./lector_qr.html">Lector QR</a>
+                <a href="./configuracion.html">Configuración</a>
+                <a href="./acerca.html">Acerca</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Agregar Nuevo Elemento</h1>
+                <p>Complete todos los campos para registrar un nuevo elemento en el inventario</p>
+            </div>
+
+            <div class="form-content">
+                <!-- Sección de Filtros -->
+                <div class="filter-section">
+                    <div class="filter-header">
+                        <h3 class="filter-title">
+                            <span>🔍</span>
+                            Filtros y Búsqueda
+                        </h3>
+                        <button type="button" class="filter-toggle" onclick="toggleFormFilters()" id="filterToggle">
+                            Mostrar Filtros
+                        </button>
+                    </div>
+                    
+                    <div class="filter-controls" id="filterControls" style="display: none;">
+                        <div class="filter-group">
+                            <label for="sectionFilter">Mostrar Sección</label>
+                            <select id="sectionFilter" class="filter-select">
+                                <option value="all">Todas las secciones</option>
+                                <option value="basic">Información Básica</option>
+                                <option value="dates">Fechas y Cronograma</option>
+                                <option value="process">Estados del Proceso</option>
+                                <option value="financial">Información Financiera</option>
+                                <option value="observations">Observaciones</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="requiredFilter">Mostrar Campos</label>
+                            <select id="requiredFilter" class="filter-select">
+                                <option value="all">Todos los campos</option>
+                                <option value="required">Solo requeridos</option>
+                                <option value="optional">Solo opcionales</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="searchFields">Buscar Campo</label>
+                            <input type="text" id="searchFields" class="filter-input" 
+                                   placeholder="Buscar por nombre de campo...">
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button type="button" class="filter-btn clear" onclick="clearFormFilters()">
+                                🔄 Limpiar
+                            </button>
+                            <button type="button" class="filter-btn apply" onclick="showAllSections()">
+                                🔍 Mostrar Todo
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-status">
+                        <span id="filterStatusText">Mostrando: todas las secciones</span>
+                        <span class="status-badge" id="filterBadge">Sin filtros</span>
+                    </div>
+                </div>
+
+                <div class="form-progress">
+                    <div class="form-progress-bar" id="progressBar"></div>
+                </div>
+
+                <form id="inventoryForm">
+                    <!-- Información Básica -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">📋</span>
+                            Información Básica
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="required">ID del Elemento</label>
+                                <input type="text" id="elementId" name="elementId" class="form-input" 
+                                       placeholder="Ej: WS-001" required>
+                                <div class="error-message">El ID es requerido y debe ser único</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Responsable</label>
+                                <select id="responsable" name="responsable" class="form-select" required>
+                                    <option value="">Seleccionar opción...</option>
+                                    <option value="William Camargo">William Camargo</option>
+                                    <option value="Victor Vidal">Victor Vidal</option>
+                                    <option value="Jose Santiago">Jose Santiago</option>
+                                    <option value="Germán">Germán</option>
+                                    <option value="Michael Leal">Michael Leal</option>
+                                    <option value="Freddy Salas">Freddy Salas</option>
+                                    <option value="Cristian Guarin">Cristian Guarin</option>
+                                    <option value="M Alejandra">M Alejandra</option>
+                                    <option value="Reynaldo">Reynaldo</option>
+                                </select>
+                                <div class="error-message">Debe seleccionar un responsable</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Marca</label>
+                                <input type="text" id="marca" name="marca" class="form-input" 
+                                       placeholder="Ej: Microsoft, Dell, Adobe..." required>
+                                <div class="error-message">La marca es requerida</div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="required">Equipo/Software/Licencia/Sistema</label>
+                                <input type="text" id="equipo" name="equipo" class="form-input" 
+                                       placeholder="Descripción detallada del elemento..." required>
+                                <div class="error-message">La descripción del equipo es requerida</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="required">Cantidad</label>
+                                <input type="number" id="cantidad" name="cantidad" class="form-input" 
+                                       min="1" placeholder="1" value="1" required>
+                                <div class="error-message">La cantidad debe ser mayor a 0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fechas y Cronograma -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon">📅</span>
+                            Fechas y Cronograma
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="required">Inicio de Proceso de Compra</label>
+                                <input type="date" id="fechaInicio" name="fechaInicio" class="form-input" required>
+                                <div class="error-message">La fecha de inicio es requerida</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Fecha de Vencimiento</label>
+                                <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-input">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Duración del Proyecto (Días)</label>
+                                <input type="number" id="duracionProyecto" name="duracionProyecto" 
+                                       class="form-input" min="1" placeholder="30">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Días Restantes del Proyecto</label>
+                                <input type="number" id="diasRestantes" name="diasRestantes" 
+                                       class="form-input" min="0" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estados del Proceso -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon"></span>
+                            Estados del Proceso
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Avance General (%)</label>
+                                <input type="range" id="avanceRange" name="avanceRange" 
+                                       min="0" max="100" value="0" class="form-input">
+                                <input type="number" id="avanceNumber" name="avanceNumber" 
+                                       min="0" max="100" value="0" class="form-input" style="margin-top: 8px;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Estado Final</label>
+                                <select id="estadoFinal" name="estadoFinal" class="form-select">
+                                    <option value="Sin Iniciar">Sin Iniciar</option>
+                                    <option value="En Proceso">En Proceso</option>
+                                    <option value="Terminado">Terminado</option>
+                                    <option value="Cancelado">Cancelado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="progress-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="solicitudCotizacion" name="solicitudCotizacion">
+                                <label for="solicitudCotizacion">Solicitud de Cotización</label>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="preComiteCompras" name="preComiteCompras">
+                                <label for="preComiteCompras">Pre Comité de Compras</label>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="comiteCompras" name="comiteCompras">
+                                <label for="comiteCompras">Comité de Compras</label>
+                            </div>
+
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="ordenCompra" name="ordenCompra">
+                                <label for="ordenCompra">Generación Orden de Compras</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información Financiera -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon"></span>
+                            Información Financiera
+                        </h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="presupuestado" name="presupuestado">
+                                    <label for="presupuestado">Elemento Presupuestado</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group money-input">
+                                <label>Valor Último Pago con IVA</label>
+                                <input type="number" id="valorPago" name="valorPago" class="form-input" 
+                                       step="0.01" min="0" placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <span class="section-icon"></span>
+                            Observaciones Adicionales
+                        </h3>
+                        <div class="form-group full-width">
+                            <label>Observaciones</label>
+                            <textarea id="observaciones" name="observaciones" class="form-textarea" 
+                                      maxlength="500" placeholder="Ingrese cualquier observación adicional relevante..."></textarea>
+                            <div class="char-counter">
+                                <span id="charCount">0</span> / 500 caracteres
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="form-actions">
+                        <button type="button" class="btn secondary" onclick="resetForm()">
+                            Limpiar Formulario
+                        </button>
+                        <button type="button" class="btn primary" onclick="previewData()">
+                            Vista Previa
+                        </button>
+                        <button type="submit" class="btn success">
+                            Guardar Elemento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Vista Previa -->
+    <div id="previewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 12px; padding: 32px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <h3 style="margin: 0 0 20px 0; color: var(--accent);">Vista Previa del Elemento</h3>
+            <div id="previewContent"></div>
+            <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+                <button type="button" class="btn secondary" onclick="closePreview()">Cerrar</button>
+                <button type="button" class="btn success" onclick="confirmSave()">Confirmar y Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de gestión del formulario
+        class InventoryFormManager {
+            constructor() {
+                this.form = document.getElementById('inventoryForm');
+                this.progressBar = document.getElementById('progressBar');
+                this.filters = {
+                    section: 'all',
+                    required: 'all',
+                    search: ''
+                };
+                this.initializeForm();
+            }
+
+            initializeForm() {
+                this.setupEventListeners();
+                this.setupFilterListeners();
+                this.updateProgress();
+                this.calculateDaysRemaining();
+            }
+
+            setupFilterListeners() {
+                // Filtros de sección
+                document.getElementById('sectionFilter').addEventListener('change', () => {
+                    this.filters.section = document.getElementById('sectionFilter').value;
+                    this.applyFilters();
+                });
+
+                // Filtros de campos requeridos
+                document.getElementById('requiredFilter').addEventListener('change', () => {
+                    this.filters.required = document.getElementById('requiredFilter').value;
+                    this.applyFilters();
+                });
+
+                // Búsqueda de campos
+                document.getElementById('searchFields').addEventListener('input', () => {
+                    this.filters.search = document.getElementById('searchFields').value.toLowerCase();
+                    this.applyFilters();
+                });
+            }
+
+            applyFilters() {
+                const sections = document.querySelectorAll('.form-section');
+                const formGroups = document.querySelectorAll('.form-group');
+                let visibleSections = 0;
+                let visibleFields = 0;
+
+                // Limpiar clases anteriores
+                sections.forEach(section => {
+                    section.classList.remove('hidden', 'highlighted');
+                });
+                formGroups.forEach(group => {
+                    group.classList.remove('hidden', 'highlighted');
+                });
+
+                // Aplicar filtro de sección
+                if (this.filters.section !== 'all') {
+                    sections.forEach(section => {
+                        const sectionId = this.getSectionId(section);
+                        if (sectionId !== this.filters.section) {
+                            section.classList.add('hidden');
+                        } else {
+                            section.classList.add('highlighted');
+                            visibleSections++;
+                        }
+                    });
+                } else {
+                    visibleSections = sections.length;
+                }
+
+                // Aplicar filtro de campos requeridos
+                if (this.filters.required !== 'all') {
+                    formGroups.forEach(group => {
+                        const hasRequiredField = group.querySelector('[required]');
+                        const isRequired = hasRequiredField !== null;
+                        
+                        if (this.filters.required === 'required' && !isRequired) {
+                            group.classList.add('hidden');
+                        } else if (this.filters.required === 'optional' && isRequired) {
+                            group.classList.add('hidden');
+                        } else if (!group.classList.contains('hidden')) {
+                            visibleFields++;
+                        }
+                    });
+                } else {
+                    visibleFields = formGroups.length;
+                }
+
+                // Aplicar filtro de búsqueda
+                if (this.filters.search) {
+                    formGroups.forEach(group => {
+                        const label = group.querySelector('label');
+                        const labelText = label ? label.textContent.toLowerCase() : '';
+                        
+                        if (!labelText.includes(this.filters.search) && !group.classList.contains('hidden')) {
+                            group.classList.add('hidden');
+                        } else if (labelText.includes(this.filters.search)) {
+                            group.classList.add('highlighted');
+                            // Mostrar la sección padre si está oculta
+                            const parentSection = group.closest('.form-section');
+                            if (parentSection && parentSection.classList.contains('hidden')) {
+                                parentSection.classList.remove('hidden');
+                                parentSection.classList.add('highlighted');
+                            }
+                        }
+                    });
+                }
+
+                this.updateFilterStatus();
+            }
+
+            getSectionId(section) {
+                const title = section.querySelector('.section-title');
+                if (!title) return '';
+                
+                const text = title.textContent.toLowerCase();
+                if (text.includes('información básica')) return 'basic';
+                if (text.includes('fechas')) return 'dates';
+                if (text.includes('estados')) return 'process';
+                if (text.includes('financiera')) return 'financial';
+                if (text.includes('observaciones')) return 'observations';
+                return '';
+            }
+
+            updateFilterStatus() {
+                const statusText = document.getElementById('filterStatusText');
+                const filterBadge = document.getElementById('filterBadge');
+                
+                let status = 'Mostrando: ';
+                const activeFilters = [];
+                
+                if (this.filters.section !== 'all') {
+                    const sectionName = document.getElementById('sectionFilter').selectedOptions[0].text;
+                    activeFilters.push(sectionName.toLowerCase());
+                }
+                
+                if (this.filters.required !== 'all') {
+                    activeFilters.push(this.filters.required === 'required' ? 'campos requeridos' : 'campos opcionales');
+                }
+                
+                if (this.filters.search) {
+                    activeFilters.push(`búsqueda: "${this.filters.search}"`);
+                }
+                
+                if (activeFilters.length > 0) {
+                    status += activeFilters.join(', ');
+                    filterBadge.textContent = 'Filtros activos';
+                    filterBadge.classList.add('active');
+                } else {
+                    status += 'todas las secciones';
+                    filterBadge.textContent = 'Sin filtros';
+                    filterBadge.classList.remove('active');
+                }
+                
+                statusText.textContent = status;
+            }
+
+            clearFilters() {
+                this.filters = { section: 'all', required: 'all', search: '' };
+                document.getElementById('sectionFilter').value = 'all';
+                document.getElementById('requiredFilter').value = 'all';
+                document.getElementById('searchFields').value = '';
+                this.applyFilters();
+            }
+
+            showAllSections() {
+                this.clearFilters();
+                this.showNotification('Mostrando todas las secciones y campos', 'success');
+            }
+
+            setupEventListeners() {
+                // Sincronizar rango y número para avance
+                const avanceRange = document.getElementById('avanceRange');
+                const avanceNumber = document.getElementById('avanceNumber');
+                
+                avanceRange.addEventListener('input', () => {
+                    avanceNumber.value = avanceRange.value;
+                    this.updateProgress();
+                });
+
+                avanceNumber.addEventListener('input', () => {
+                    avanceRange.value = avanceNumber.value;
+                    this.updateProgress();
+                });
+
+                // Contador de caracteres para observaciones
+                const observaciones = document.getElementById('observaciones');
+                const charCount = document.getElementById('charCount');
+                
+                observaciones.addEventListener('input', () => {
+                    charCount.textContent = observaciones.value.length;
+                });
+
+                // Calcular días restantes automáticamente
+                const fechaInicio = document.getElementById('fechaInicio');
+                const fechaVencimiento = document.getElementById('fechaVencimiento');
+                const duracionProyecto = document.getElementById('duracionProyecto');
+
+                [fechaInicio, fechaVencimiento, duracionProyecto].forEach(field => {
+                    field.addEventListener('change', () => this.calculateDaysRemaining());
+                });
+
+                // Validación en tiempo real
+                const requiredFields = this.form.querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    field.addEventListener('blur', () => this.validateField(field));
+                    field.addEventListener('input', () => this.updateProgress());
+                });
+
+                // Envío del formulario
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+                // Auto-cálculo de checkboxes para avance
+                const checkboxes = this.form.querySelectorAll('input[type="checkbox"]:not(#presupuestado)');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', () => this.updateProgressFromCheckboxes());
+                });
+            }
+
+            validateField(field) {
+                const formGroup = field.closest('.form-group');
+                let isValid = true;
+                let errorMessage = '';
+
+                // Validaciones específicas por tipo de campo
+                if (field.hasAttribute('required') && field.value.trim() === '') {
+                    isValid = false;
+                    errorMessage = 'Este campo es requerido';
+                } else if (field.type === 'email' && field.value && !field.value.includes('@')) {
+                    isValid = false;
+                    errorMessage = 'Ingrese un email válido';
+                } else if (field.type === 'number' && field.value && parseFloat(field.value) < 0) {
+                    isValid = false;
+                    errorMessage = 'El valor debe ser mayor o igual a 0';
+                } else if (field.id === 'elementId' && field.value && field.value.length < 3) {
+                    isValid = false;
+                    errorMessage = 'El ID debe tener al menos 3 caracteres';
+                }
+
+                const errorElement = formGroup.querySelector('.error-message');
+                if (errorElement) {
+                    errorElement.textContent = errorMessage;
+                }
+
+                if (isValid) {
+                    formGroup.classList.remove('error');
+                    formGroup.classList.add('success');
+                } else {
+                    formGroup.classList.remove('success');
+                    formGroup.classList.add('error');
+                }
+
+                return isValid;
+            }
+
+            updateProgress() {
+                const requiredFields = this.form.querySelectorAll('[required]');
+                let filledFields = 0;
+
+                requiredFields.forEach(field => {
+                    if (field.value.trim() !== '') {
+                        filledFields++;
+                    }
+                });
+
+                const progress = (filledFields / requiredFields.length) * 100;
+                this.progressBar.style.width = progress + '%';
+            }
+
+            updateProgressFromCheckboxes() {
+                const checkboxes = this.form.querySelectorAll('input[type="checkbox"]:not(#presupuestado)');
+                const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+                const totalSteps = checkboxes.length;
+                
+                if (totalSteps > 0) {
+                    const progress = (checkedCount / totalSteps) * 100;
+                    document.getElementById('avanceRange').value = progress;
+                    document.getElementById('avanceNumber').value = progress;
+                }
+            }
+
+            calculateDaysRemaining() {
+                const fechaInicio = document.getElementById('fechaInicio').value;
+                const fechaVencimiento = document.getElementById('fechaVencimiento').value;
+                const duracionProyecto = document.getElementById('duracionProyecto').value;
+                const diasRestantesField = document.getElementById('diasRestantes');
+
+                if (fechaInicio && (fechaVencimiento || duracionProyecto)) {
+                    const inicio = new Date(fechaInicio);
+                    let vencimiento;
+
+                    if (fechaVencimiento) {
+                        vencimiento = new Date(fechaVencimiento);
+                    } else if (duracionProyecto) {
+                        vencimiento = new Date(inicio);
+                        vencimiento.setDate(inicio.getDate() + parseInt(duracionProyecto));
+                        document.getElementById('fechaVencimiento').value = vencimiento.toISOString().split('T')[0];
+                    }
+
+                    const hoy = new Date();
+                    const diferenciaMilis = vencimiento - hoy;
+                    const diasRestantes = Math.ceil(diferenciaMilis / (1000 * 60 * 60 * 24));
+
+                    diasRestantesField.value = Math.max(0, diasRestantes);
+                    
+                    // También actualizar la duración del proyecto si solo se especificó fecha de vencimiento
+                    if (fechaVencimiento && !duracionProyecto) {
+                        const diferenciaDias = Math.ceil((vencimiento - inicio) / (1000 * 60 * 60 * 24));
+                        document.getElementById('duracionProyecto').value = Math.max(1, diferenciaDias);
+                    }
+                }
+            }
+
+            collectFormData() {
+                const formData = new FormData(this.form);
+                const data = {};
+
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Agregar checkboxes no marcados
+                const checkboxes = this.form.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    data[checkbox.name] = checkbox.checked;
+                });
+
+                // Calcular campos derivados
+                data.avance = document.getElementById('avanceNumber').value + '%';
+                data.diasRestantes = document.getElementById('diasRestantes').value;
+
+                return data;
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                
+                // Validar todos los campos requeridos
+                const requiredFields = this.form.querySelectorAll('[required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!this.validateField(field)) {
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) {
+                    this.showNotification('Por favor, complete todos los campos requeridos', 'error');
+                    return;
+                }
+
+                // Mostrar vista previa
+                previewData();
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => notification.classList.add('show'), 100);
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+
+            resetForm() {
+                this.form.reset();
+                
+                // Limpiar clases de validación
+                const formGroups = this.form.querySelectorAll('.form-group');
+                formGroups.forEach(group => {
+                    group.classList.remove('error', 'success');
+                });
+
+                // Resetear progreso
+                document.getElementById('avanceRange').value = 0;
+                document.getElementById('avanceNumber').value = 0;
+                document.getElementById('charCount').textContent = 0;
+                this.updateProgress();
+                
+                this.showNotification('Formulario limpiado correctamente', 'warning');
+            }
+        }
+
+        // Funciones globales
+        let formManager;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            formManager = new InventoryFormManager();
+            
+            // Auto-generar ID sugerido
+            const elementIdField = document.getElementById('elementId');
+            if (elementIdField && !elementIdField.value) {
+                const currentDate = new Date();
+                const year = currentDate.getFullYear().toString().slice(-2);
+                const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                const day = currentDate.getDate().toString().padStart(2, '0');
+                const suggestedId = `WS-${year}${month}${day}-${Math.floor(Math.random() * 100).toString().padStart(2, '0')}`;
+                elementIdField.placeholder = `Ej: ${suggestedId}`;
+            }
+
+            // Atajos de teclado para filtros
+            document.addEventListener('keydown', function(e) {
+                // Ctrl + F: Enfocar búsqueda de campos
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    const searchField = document.getElementById('searchFields');
+                    const filterControls = document.getElementById('filterControls');
+                    if (filterControls.style.display === 'none') {
+                        toggleFormFilters();
+                    }
+                    searchField.focus();
+                }
+                
+                // Ctrl + 1-5: Ir a secciones específicas
+                if (e.ctrlKey && e.key >= '1' && e.key <= '5') {
+                    e.preventDefault();
+                    const sections = ['basic', 'dates', 'process', 'financial', 'observations'];
+                    const sectionIndex = parseInt(e.key) - 1;
+                    if (sections[sectionIndex]) {
+                        goToSection(sections[sectionIndex]);
+                    }
+                }
+                
+                // Ctrl + R: Mostrar solo campos requeridos
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    showOnlyRequired();
+                }
+                
+                // Ctrl + A: Mostrar todo
+                if (e.ctrlKey && e.key === 'a' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    showAllSections();
+                }
+                
+                // Escape: Limpiar filtros
+                if (e.key === 'Escape') {
+                    clearFormFilters();
+                }
+            });
+
+            // Mostrar ayuda de atajos de teclado
+            console.log('🔥 Atajos de teclado disponibles:');
+            console.log('Ctrl + F: Buscar campos');
+            console.log('Ctrl + 1-5: Ir a secciones específicas');
+            console.log('Ctrl + R: Solo campos requeridos');
+            console.log('Ctrl + A: Mostrar todo');
+            console.log('Escape: Limpiar    filtros');
+        });
+
+        // Funciones globales para filtros
+        function toggleFormFilters() {
+            const controls = document.getElementById('filterControls');
+            const toggle = document.getElementById('filterToggle');
+            
+            if (controls.style.display === 'none' || !controls.style.display) {
+                controls.style.display = 'grid';
+                toggle.textContent = 'Ocultar Filtros';
+            } else {
+                controls.style.display = 'none';
+                toggle.textContent = 'Mostrar Filtros';
+            }
+        }
+
+        function clearFormFilters() {
+            if (formManager) {
+                formManager.clearFilters();
+                formManager.showNotification('Filtros limpiados', 'warning');
+            }
+        }
+
+        function showAllSections() {
+            if (formManager) {
+                formManager.showAllSections();
+            }
+        }
+
+        // Funciones de utilidad para navegación rápida
+        function goToSection(sectionId) {
+            if (formManager) {
+                formManager.filters.section = sectionId;
+                document.getElementById('sectionFilter').value = sectionId;
+                formManager.applyFilters();
+                
+                // Scroll suave a la sección
+                const section = document.querySelector('.form-section.highlighted');
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+
+        function showOnlyRequired() {
+            if (formManager) {
+                formManager.filters.required = 'required';
+                document.getElementById('requiredFilter').value = 'required';
+                formManager.applyFilters();
+                formManager.showNotification('Mostrando solo campos requeridos', 'success');
+            }
+        }
+
+        function resetForm() {
+            if (confirm('¿Está seguro de que desea limpiar todos los campos del formulario?')) {
+                formManager.resetForm();
+            }
+        }
+
+        function previewData() {
+            const data = formManager.collectFormData();
+            const previewContent = document.getElementById('previewContent');
+            
+            previewContent.innerHTML = `
+                <div style="display: grid; gap: 12px; font-size: 0.9rem; max-height: 400px; overflow-y: auto;">
+                    <div style="background: #f8f9fa; padding: 12px; border-radius: 6px;"><strong>ID:</strong> ${data.elementId || 'No especificado'}</div>
+                    <div><strong>Responsable:</strong> ${data.responsable || 'No especificado'}</div>
+                    <div><strong>Marca:</strong> ${data.marca || 'No especificada'}</div>
+                    <div><strong>Equipo/Software/Licencia:</strong> ${data.equipo || 'No especificado'}</div>
+                    <div><strong>Cantidad:</strong> ${data.cantidad || '1'}</div>
+                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                    <div><strong>Fecha Inicio:</strong> ${data.fechaInicio || 'No especificada'}</div>
+                    <div><strong>Fecha Vencimiento:</strong> ${data.fechaVencimiento || 'No especificada'}</div>
+                    <div><strong>Duración:</strong> ${data.duracionProyecto || 'No especificada'} días</div>
+                    <div><strong>Días Restantes:</strong> ${data.diasRestantes || 'Calculado automáticamente'}</div>
+                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                    <div><strong>Avance:</strong> ${data.avance}</div>
+                    <div><strong>Estado Final:</strong> ${data.estadoFinal}</div>
+                    <div style="background: #f0f8ff; padding: 8px; border-radius: 4px; font-size: 0.85rem;">
+                        <strong>Etapas del proceso:</strong><br>
+                        • Solicitud Cotización: ${data.solicitudCotizacion ? 'Completado' : 'Pendiente'}<br>
+                        • Pre Comité: ${data.preComiteCompras ? 'Completado' : 'Pendiente'}<br>
+                        • Comité Compras: ${data.comiteCompras ? 'Completado' : 'Pendiente'}<br>
+                        • Orden Compra: ${data.ordenCompra ? 'Completado' : 'Pendiente'}
+                    </div>
+                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                    <div><strong>Presupuestado:</strong> ${data.presupuestado ? 'Sí' : 'No'}</div>
+                    <div><strong>Valor Pago:</strong> $${(parseFloat(data.valorPago) || 0).toLocaleString('es-CO', {minimumFractionDigits: 2})}</div>
+                    ${data.observaciones ? `<div style="background: #fff9e6; padding: 8px; border-radius: 4px;"><strong>Observaciones:</strong><br>${data.observaciones}</div>` : ''}
+                </div>
+            `;
+
+            document.getElementById('previewModal').style.display = 'block';
+        }
+
+        function closePreview() {
+            document.getElementById('previewModal').style.display = 'none';
+        }
+
+        function confirmSave() {
+            const data = formManager.collectFormData();
+            
+            // Aquí se implementaría la lógica para guardar en la base de datos
+            // Por ahora, simularemos el guardado
+            
+            formManager.showNotification('Elemento guardado exitosamente en el inventario', 'success');
+            closePreview();
+            
+            // Opcional: redirigir a la página principal después de 2 segundos
+            setTimeout(() => {
+                window.location.href = './Pantalla_Inicial.html';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
